@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Jogos Interativos </title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="login-modal" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(255,255,255,0.97);z-index:9999;display:flex;align-items:center;justify-content:center;">
+        <form id="login-form" style="background:#fff0f6;padding:2.5rem 2rem;border-radius:18px;box-shadow:0 4px 24px rgba(248,87,166,0.13);display:flex;flex-direction:column;align-items:center;gap:1.2rem;min-width:320px;">
+            <h2 style="color:#f857a6;margin-bottom:0.5rem;">Bem-vindo!</h2>
+            <label for="login-nome" style="font-size:1.1rem;color:#f857a6;">Digite seu nome para jogar:</label>
+            <input id="login-nome" type="text" required maxlength="18" placeholder="Seu nome" style="padding:0.8rem 1.2rem;font-size:1.1rem;border-radius:12px;border:2px solid #f857a6;outline:none;width:200px;">
+            <button type="submit" style="background:linear-gradient(90deg,#f857a6,#ff5858);color:#fff;border:none;padding:0.8rem 2.2rem;border-radius:14px;font-size:1.1rem;font-weight:bold;box-shadow:0 2px 8px rgba(248,87,166,0.10);margin-top:0.5rem;">Entrar</button>
+        </form>
+    </div>
+    <header style="background: linear-gradient(90deg, #f857a6 0%, #ff5858 100%); color: #fff; padding: 2rem 0; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+    <h1 tabindex="0" style="font-size:2.8rem; margin-bottom:0.5rem; letter-spacing:2px;">🎮 Jogos Interativos</h1>
+    <p style="font-size:1.2rem;">Diversão, desafio e aprendizado para todas as idades!</p>
+    <button id="logout-btn" onclick="logout()" style="display:none;position:absolute;top:18px;right:32px;background:#fff0f6;color:#f857a6;border:2px solid #f857a6;padding:0.5rem 1.2rem;border-radius:12px;font-size:1rem;font-weight:bold;box-shadow:0 2px 8px rgba(248,87,166,0.10);cursor:pointer;transition:background 0.2s;z-index:10001;">Sair</button>
+    </header>
+    <nav aria-label="Navegação principal" style="display:flex;justify-content:center;gap:2rem;margin:2rem 0;flex-wrap:wrap;">
+        <div style="display:flex;gap:1.5rem;">
+            <button id="btn-memory" onclick="showGame('memory')" style="background:#fff;color:#f857a6;border:2px solid #f857a6;padding:1rem 2rem;border-radius:16px;font-size:1.1rem;box-shadow:0 2px 8px rgba(248,87,166,0.08);transition:all 0.2s;display:flex;align-items:center;gap:0.7rem;">
+                <span style="font-size:1.5rem;">🧠</span>
+                <span>Jogo da Memória</span>
+            </button>
+            <button id="btn-quiz" onclick="showGame('quiz')" style="background:#fff;color:#ff5858;border:2px solid #ff5858;padding:1rem 2rem;border-radius:16px;font-size:1.1rem;box-shadow:0 2px 8px rgba(255,88,88,0.08);transition:all 0.2s;display:flex;align-items:center;gap:0.7rem;">
+                <span style="font-size:1.5rem;">❓</span>
+                <span>Quiz</span>
+            </button>
+            <button id="btn-velha" onclick="showGame('velha')" style="background:#fff;color:#ffb347;border:2px solid #ffb347;padding:1rem 2rem;border-radius:16px;font-size:1.1rem;box-shadow:0 2px 8px rgba(255,179,71,0.08);transition:all 0.2s;display:flex;align-items:center;gap:0.7rem;">
+                <span style="font-size:1.5rem;">⭕</span>
+                <span>Jogo da Velha</span>
+            </button>
+            <button id="btn-dado" onclick="showGame('dado')" style="background:#fff;color:#7b68ee;border:2px solid #7b68ee;padding:1rem 2rem;border-radius:16px;font-size:1.1rem;box-shadow:0 2px 8px rgba(123,104,238,0.08);transition:all 0.2s;display:flex;align-items:center;gap:0.7rem;">
+                <span style="font-size:1.5rem;">🎲</span>
+                <span>Jogo do Dado</span>
+            </button>
+            <button id="btn-click" onclick="showGame('click')" style="background:#fff;color:#00b894;border:2px solid #00b894;padding:1rem 2rem;border-radius:16px;font-size:1.1rem;box-shadow:0 2px 8px rgba(0,184,148,0.08);transition:all 0.2s;display:flex;align-items:center;gap:0.7rem;">
+                <span style="font-size:1.5rem;">⏱️</span>
+                <span>Click Rápido</span>
+            </button>
+            <button id="btn-caca" onclick="showGame('caca')" style="background:#fff;color:#9b59b6;border:2px solid #9b59b6;padding:1rem 2rem;border-radius:16px;font-size:1.1rem;box-shadow:0 2px 8px rgba(155,89,182,0.08);transition:all 0.2s;display:flex;align-items:center;gap:0.7rem;">
+                <span style="font-size:1.5rem;">🔤</span>
+                <span>Caça-Palavras</span>
+            </button>
+        </div>
+    </nav>
+    <main style="background: #f9f9f9; border-radius: 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.07); max-width: 950px; margin: 0 auto 2rem auto; padding: 2.5rem 1.5rem;">
+        <section aria-label="Instruções" style="background: #fff0f6; border-radius: 12px; padding: 1.5rem; margin-bottom:2rem; box-shadow: 0 2px 8px rgba(248,87,166,0.05);">
+            <h2 style="color:#f857a6;">Como jogar</h2>
+            <ul style="font-size:1.1rem;line-height:1.7;">
+                <li><b>Jogo da Memória:</b> Escolha o nível (Fácil, Médio ou Difícil) e clique nas cartas para encontrar os pares de emojis iguais.</li>
+                <li><b>Quiz:</b> Selecione o nível (Fundamental 1, Fundamental 2 ou Médio) e responda perguntas de conhecimentos gerais. Veja sua pontuação ao final.</li>
+                <li><b>Jogo da Velha:</b> Jogue contra o robô (você é o X). Escolha a dificuldade (Fácil, Médio ou Difícil) e tente alinhar três símbolos.</li>
+                <li><b>Jogo do Dado:</b> Clique no botão para rolar o dado e veja o resultado de 1 a 6.</li>
+                <li><b>Click Rápido:</b> Clique no botão o máximo de vezes que conseguir em 15 segundos!</li>
+                <li><b>Caça-Palavras:</b> Escolha o nível (Fácil, Médio, Difícil ou Extremo) e encontre as palavras escondidas no quadro. Digite as palavras encontradas para marcá-las.</li>
+            </ul>
+        </section>
+        <!-- Jogo da Memória -->
+        <section id="memory" class="game-section" style="background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(248,87,166,0.05); padding: 1.5rem; margin-bottom:2rem;">
+            <h2 style="color:#f857a6;">Jogo da Memória</h2>
+            <div style="display:flex;justify-content:center;align-items:center;gap:1rem;margin-bottom:1rem;">
+                <label for="memory-nivel" style="color:#f857a6;font-weight:bold;">Nível:</label>
+                <select id="memory-nivel" onchange="selecionarNivelMemoria()" style="padding:0.5rem 1.2rem;border-radius:10px;border:2px solid #f857a6;font-size:1.05rem;background:#fff0f6;color:#f857a6;font-weight:bold;">
+                    <option value="facil">Fácil (16 cartas)</option>
+                    <option value="medio">Médio (24 cartas)</option>
+                    <option value="dificil">Difícil (30 cartas)</option>
+                </select>
+            </div>
+            <p>Encontre todos os pares de emojis!</p>
+            <div id="memory-board" style="display: grid; grid-template-columns: repeat(4, 60px); gap: 10px; justify-content: center; margin: 1rem 0;">
+                <div class="memory-card" style="background:#fda085;border-radius:8px;display:flex;align-items:center;justify-content:center;height:60px;font-size:2rem;cursor:pointer;"><span>?</span></div>
+                <div class="memory-card" style="background:#fda085;border-radius:8px;display:flex;align-items:center;justify-content:center;height:60px;font-size:2rem;cursor:pointer;"><span>?</span></div>
+                <div class="memory-card" style="background:#fda085;border-radius:8px;display:flex;align-items:center;justify-content:center;height:60px;font-size:2rem;cursor:pointer;"><span>?</span></div>
+                <div class="memory-card" style="background:#fda085;border-radius:8px;display:flex;align-items:center;justify-content:center;height:60px;font-size:2rem;cursor:pointer;"><span>?</span></div>
+                <div class="memory-card" style="background:#fda085;border-radius:8px;display:flex;align-items:center;justify-content:center;height:60px;font-size:2rem;cursor:pointer;"><span>?</span></div>
+                <div class="memory-card" style="background:#fda085;border-radius:8px;display:flex;align-items:center;justify-content:center;height:60px;font-size:2rem;cursor:pointer;"><span>?</span></div>
+                <div class="memory-card" style="background:#fda085;border-radius:8px;display:flex;align-items:center;justify-content:center;height:60px;font-size:2rem;cursor:pointer;"><span>?</span></div>
+                <div class="memory-card" style="background:#fda085;border-radius:8px;display:flex;align-items:center;justify-content:center;height:60px;font-size:2rem;cursor:pointer;"><span>?</span></div>
+            </div>
+            <button onclick="shuffleMemory()" style="background:#f857a6;color:#fff;border:none;padding:0.7rem 1.5rem;border-radius:12px;font-size:1rem;margin-top:1rem;">Reiniciar</button>
+        </section>
+        <!-- Jogo do Dado -->
+        <section id="dado" class="game-section" style="display:none;background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(123,104,238,0.08); padding: 1.5rem; margin-bottom:2rem;">
+            <h2 style="color:#7b68ee;text-align:center;">Jogo do Dado</h2>
+            <p style="text-align:center;">Clique no botão para rolar o dado!</p>
+            <div id="dado-resultado" style="text-align:center;margin:1.5rem 0;">
+                <img id="dado-img" src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Dice-1-b.svg" alt="Dado" style="width:90px;height:90px;transition:transform 0.3s;">
+            </div>
+            <button onclick="rolarDado()" style="background:#7b68ee;color:#fff;border:none;padding:0.8rem 2.2rem;border-radius:14px;font-size:1.1rem;font-weight:bold;box-shadow:0 2px 8px rgba(123,104,238,0.10);display:block;margin:0 auto;">Rolar Dado</button>
+        </section>
+        <!-- Jogo do Click Rápido -->
+        <section id="click" class="game-section" style="display:none;background: linear-gradient(120deg,#e0fff4 0%,#fff 100%); border-radius: 16px; box-shadow: 0 4px 18px rgba(0,184,148,0.10); padding: 2rem 1.5rem; margin-bottom:2rem;">
+            <h2 style="color:#00b894;text-align:center;font-size:2rem;margin-bottom:1.2rem;letter-spacing:1px;">Click Rápido</h2>
+            <p style="text-align:center;font-size:1.1rem;">Clique no botão o máximo de vezes que conseguir em <b>15 segundos</b>!</p>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:1.5rem;">
+                <div id="click-contador" style="font-size:2.8rem;color:#00b894;font-weight:bold;letter-spacing:2px;">0</div>
+                <button id="click-btn" onclick="clickRapido()" style="background:linear-gradient(90deg,#00b894,#00cec9);color:#fff;border:none;padding:1.5rem 3.5rem;border-radius:20px;font-size:1.5rem;font-weight:bold;box-shadow:0 4px 16px rgba(0,184,148,0.13);transition:transform 0.1s,background 0.2s;outline:none;">Clique!</button>
+                <div id="click-tempo" style="font-size:1.2rem;color:#00b894;font-weight:bold;">Tempo: 15s</div>
+                <button onclick="resetClickRapido()" style="background:#fff;color:#00b894;border:2px solid #00b894;padding:0.7rem 2rem;border-radius:14px;font-size:1.1rem;font-weight:bold;box-shadow:0 2px 8px rgba(0,184,148,0.08);">Reiniciar</button>
+            </div>
+            <style>
+    /* Responsividade geral */
+    @media (max-width: 900px) {
+        main {
+            max-width: 98vw !important;
+            padding: 1.2rem 0.2rem !important;
+        }
+    }
+    @media (max-width: 700px) {
+        nav > div {
+            flex-direction: column !important;
+            gap: 0.7rem !important;
+        }
+        .game-section {
+            padding: 1rem 0.2rem !important;
+        }
+        #memory-board {
+            grid-template-columns: repeat(4, 60px) !important;
+        }
+    }
+    @media (max-width: 500px) {
+        header h1 {
+            font-size: 1.5rem !important;
+        }
+        nav button {
+            font-size: 0.95rem !important;
+            padding: 0.7rem 1rem !important;
+        }
+        .game-section h2 {
+            font-size: 1.2rem !important;
+        }
+        #memory-board {
+            grid-template-columns: repeat(2, 60px) !important;
+        }
+        #velha-board {
+            grid-template-columns: repeat(3, 50px) !important;
+        }
+        .velha-cell {
+            width: 50px !important;
+            height: 50px !important;
+            font-size: 1.3rem !important;
+        }
+    }
+            #click-btn:active {
+                transform: scale(1.08);
+                background:linear-gradient(90deg,#00cec9,#00b894);
+            }
+            </style>
+        </section>
+        <!-- Quiz -->
+        <section id="quiz" class="game-section" style="display:none;background: linear-gradient(120deg,#fff0f0 0%,#ffe0e0 100%); border-radius: 16px; box-shadow: 0 4px 18px rgba(255,88,88,0.10); padding: 2rem 1.5rem; margin-bottom:2rem;">
+            <h2 style="color:#ff5858;text-align:center;font-size:2rem;margin-bottom:1.2rem;letter-spacing:1px;">Quiz Interativo</h2>
+            <div id="quiz-niveis" style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:1.5rem;">
+                <button onclick="selecionarNivelQuiz('fund1')" style="background:#fff;color:#ff5858;border:2px solid #ff5858;padding:0.7rem 1.5rem;border-radius:12px;font-size:1rem;font-weight:bold;box-shadow:0 2px 8px rgba(255,88,88,0.08);transition:background 0.2s;">Ensino Fundamental 1</button>
+                <button onclick="selecionarNivelQuiz('fund2')" style="background:#fff;color:#ff5858;border:2px solid #ff5858;padding:0.7rem 1.5rem;border-radius:12px;font-size:1rem;font-weight:bold;box-shadow:0 2px 8px rgba(255,88,88,0.08);transition:background 0.2s;">Ensino Fundamental 2</button>
+                <button onclick="selecionarNivelQuiz('medio')" style="background:#fff;color:#ff5858;border:2px solid #ff5858;padding:0.7rem 1.5rem;border-radius:12px;font-size:1rem;font-weight:bold;box-shadow:0 2px 8px rgba(255,88,88,0.08);transition:background 0.2s;">Ensino Médio</button>
+            </div>
+            <div id="quiz-content" style="max-width:420px;margin:0 auto;"></div>
+            <button onclick="showQuiz()" style="background:linear-gradient(90deg,#ff5858,#f857a6);color:#fff;border:none;padding:0.8rem 2.2rem;border-radius:14px;font-size:1.1rem;font-weight:bold;box-shadow:0 2px 8px rgba(255,88,88,0.10);margin:1.5rem auto 0 auto;display:block;transition:background 0.2s;">Reiniciar</button>
+        </section>
+        <!-- Jogo da Velha -->
+        <section id="velha" class="game-section" style="display:none;background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(255,179,71,0.05); padding: 1.5rem; margin-bottom:2rem;">
+            <h2 style="color:#ffb347;text-align:center;font-size:2.2rem;margin-bottom:0.5rem;letter-spacing:1px;">Jogo da Velha</h2>
+            <div style="margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;justify-content:center;">
+                <label for="velha-dificuldade" style="font-weight:bold;font-size:1.1rem;color:#ffb347;">Dificuldade:</label>
+                <select id="velha-dificuldade" onchange="startVelha()" style="padding:0.5rem 1.2rem;border-radius:10px;border:2px solid #ffb347;font-size:1.1rem;background:#fffbe0;color:#ffb347;font-weight:bold;">
+                    <option value="facil">Fácil</option>
+                    <option value="medio">Médio</option>
+                    <option value="dificil">Difícil</option>
+                </select>
+            </div>
+            <div id="velha-status" style="margin-bottom: 1.2rem;text-align:center;font-size:1.2rem;font-weight:bold;color:#ffb347;letter-spacing:1px;"></div>
+            <div id="velha-board" style="display: grid; grid-template-columns: repeat(3, 80px); gap: 12px; justify-content: center; margin-bottom: 1.5rem; background: #fffbe0; border-radius: 16px; box-shadow: 0 2px 12px rgba(255,179,71,0.10); padding: 18px 0;"></div>
+            <button onclick="startVelha()" style="background:linear-gradient(90deg,#ffb347,#ff5858);color:#fff;border:none;padding:0.8rem 2.2rem;border-radius:14px;font-size:1.1rem;font-weight:bold;box-shadow:0 2px 8px rgba(255,179,71,0.10);transition:background 0.2s;">Reiniciar</button>
+            <p style="text-align:center;font-size:1rem;color:#ffb347;margin-top:1.2rem;letter-spacing:0.5px;">Jogue contra o robô! Você é o <b style='color:#ff5858;'>X</b>.</p>
+        </section>
+        <!-- Caça-Palavras -->
+        <section id="caca" class="game-section" style="display:none;background: linear-gradient(120deg,#f3e5f5 0%,#fff 100%); border-radius: 16px; box-shadow: 0 4px 18px rgba(155,89,182,0.10); padding: 2rem 1.5rem; margin-bottom:2rem;">
+            <h2 style="color:#9b59b6;text-align:center;font-size:2rem;margin-bottom:1.2rem;letter-spacing:1px;">Caça-Palavras</h2>
+            <div style="display:flex;justify-content:center;align-items:center;gap:1rem;margin-bottom:1rem;flex-wrap:wrap;">
+                <label for="caca-nivel" style="color:#9b59b6;font-weight:bold;">Nível:</label>
+                <select id="caca-nivel" onchange="selecionarNivelCaca()" style="padding:0.5rem 1.2rem;border-radius:10px;border:2px solid #9b59b6;font-size:1.05rem;background:#f3e5f5;color:#9b59b6;font-weight:bold;">
+                    <option value="facil">Fácil (6x6)</option>
+                    <option value="medio">Médio (8x8)</option>
+                    <option value="dificil">Difícil (10x10)</option>
+                    <option value="extremo">Extremo (12x12)</option>
+                </select>
+                <label for="caca-tema" style="color:#9b59b6;font-weight:bold;">Tema:</label>
+                <select id="caca-tema" onchange="selecionarTemaCaca()" style="padding:0.5rem 1.2rem;border-radius:10px;border:2px solid #9b59b6;font-size:1.05rem;background:#f3e5f5;color:#9b59b6;font-weight:bold;">
+                    <option value="animais">Animais</option>
+                    <option value="frutas">Frutas</option>
+                    <option value="cores">Cores</option>
+                    <option value="paises">Países</option>
+                    <option value="esportes">Esportes</option>
+                    <option value="profissoes">Profissões</option>
+                    <option value="veiculos">Veículos</option>
+                    <option value="comidas">Comidas</option>
+                    <option value="objetos">Objetos</option>
+                    <option value="natureza">Natureza</option>
+                    <option value="corpo">Corpo Humano</option>
+                    <option value="escola">Escola</option>
+                    <option value="musica">Música</option>
+                    <option value="tecnologia">Tecnologia</option>
+                    <option value="roupas">Roupas</option>
+                </select>
+            </div>
+            <p style="text-align:center;font-size:1.1rem;margin-bottom:1rem;">Encontre as palavras escondidas no quadro!</p>
+            <div id="caca-grid" style="display:grid;gap:4px;justify-content:center;margin:1.5rem 0 1rem 0;"></div>
+            <form id="caca-form" style="display:flex;justify-content:center;gap:0.8rem;margin-bottom:1rem;flex-wrap:wrap;">
+                <input id="caca-input" type="text" placeholder="Digite a palavra encontrada" style="padding:0.7rem 1.2rem;border-radius:10px;border:2px solid #9b59b6;font-size:1.05rem;outline:none;max-width:250px;">
+                <button type="submit" style="background:#9b59b6;color:#fff;border:none;padding:0.7rem 1.5rem;border-radius:10px;font-size:1.05rem;font-weight:bold;box-shadow:0 2px 8px rgba(155,89,182,0.10);">Enviar</button>
+            </form>
+            <button onclick="reiniciarCaca()" style="background:#fff;color:#9b59b6;border:2px solid #9b59b6;padding:0.7rem 1.5rem;border-radius:10px;font-size:1.05rem;font-weight:bold;box-shadow:0 2px 8px rgba(155,89,182,0.08);margin:0 auto 1rem auto;display:block;">Reiniciar</button>
+            <div id="caca-status" style="text-align:center;font-size:1.1rem;color:#9b59b6;font-weight:bold;min-height:1.5rem;margin-bottom:0.8rem;"></div>
+        </section>
+        <!-- Contato e acessibilidade -->
+    </main>
+    <footer>
+        &copy; 2025 Jogos Interativos | Desenvolvido para todas as idades
+    </footer>
+    <script src="script.js"></script>
+<script>
+// Login persistente com localStorage
+function checkLogin() {
+    const nome = localStorage.getItem('jogador_nome');
+    if (nome) {
+        document.getElementById('login-modal').style.display = 'none';
+        document.body.classList.remove('login-aberto');
+    } else {
+        document.getElementById('login-modal').style.display = 'flex';
+        document.body.classList.add('login-aberto');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    checkLogin();
+    const form = document.getElementById('login-form');
+    if (form) {
+        form.onsubmit = function(e) {
+            e.preventDefault();
+            const nome = document.getElementById('login-nome').value.trim();
+            if (nome.length > 0) {
+                localStorage.setItem('jogador_nome', nome);
+                checkLogin();
+                showGame('memory');
+            }
+        };
+    }
+    // Exibe nome do jogador no header se logado
+    const nome = localStorage.getItem('jogador_nome');
+    if (nome) {
+        const header = document.querySelector('header');
+        if (header && !document.getElementById('nome-jogador')) {
+            const span = document.createElement('span');
+            span.id = 'nome-jogador';
+            span.textContent = `👤 ${nome}`;
+            span.style = 'display:block;font-size:1.1rem;margin-top:0.7rem;color:#fffbe0;letter-spacing:1px;';
+            header.appendChild(span);
+        }
+        // Exibe botão sair
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) logoutBtn.style.display = 'inline-block';
+    }
+});
+
+function logout() {
+    localStorage.removeItem('jogador_nome');
+    document.getElementById('login-modal').style.display = 'flex';
+    document.body.classList.add('login-aberto');
+    // Remove nome do header se existir
+    const nomeSpan = document.getElementById('nome-jogador');
+    if (nomeSpan) nomeSpan.remove();
+    // Esconde botão sair
+    document.getElementById('logout-btn').style.display = 'none';
+}
+</script>
+</body>
+</html>
