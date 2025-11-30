@@ -7,13 +7,17 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="login-modal" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(255,255,255,0.97);z-index:9999;display:flex;align-items:center;justify-content:center;">
+    <div id="login-modal" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(255,255,255,0.97);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;">
         <form id="login-form" style="background:#fff0f6;padding:2.5rem 2rem;border-radius:18px;box-shadow:0 4px 24px rgba(248,87,166,0.13);display:flex;flex-direction:column;align-items:center;gap:1.2rem;min-width:320px;">
             <h2 style="color:#f857a6;margin-bottom:0.5rem;">Bem-vindo!</h2>
             <label for="login-nome" style="font-size:1.1rem;color:#f857a6;">Digite seu nome para jogar:</label>
             <input id="login-nome" type="text" required maxlength="18" placeholder="Seu nome" style="padding:0.8rem 1.2rem;font-size:1.1rem;border-radius:12px;border:2px solid #f857a6;outline:none;width:200px;">
             <button type="submit" style="background:linear-gradient(90deg,#f857a6,#ff5858);color:#fff;border:none;padding:0.8rem 2.2rem;border-radius:14px;font-size:1.1rem;font-weight:bold;box-shadow:0 2px 8px rgba(248,87,166,0.10);margin-top:0.5rem;">Entrar</button>
         </form>
+        <div style="position:absolute;bottom:2rem;text-align:center;color:#666;font-size:1rem;">
+            <p style="margin:0;">Desenvolvido por <strong style="color:#f857a6;font-size:1.1rem;">Wyllfred Santana</strong></p>
+            <p style="margin:0.3rem 0 0 0;font-size:0.9rem;">© 2025 - Todos os direitos reservados</p>
+        </div>
     </div>
     <header style="background: linear-gradient(90deg, #f857a6 0%, #ff5858 100%); color: #fff; padding: 2rem 0; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
     <h1 tabindex="0" style="font-size:2.8rem; margin-bottom:0.5rem; letter-spacing:2px;">🎮 Jogos Interativos</h1>
@@ -108,7 +112,16 @@
     @media (max-width: 900px) {
         main {
             max-width: 98vw !important;
-            padding: 1.2rem 0.2rem !important;
+            padding: 1.2rem 0.5rem !important;
+        }
+        header h1 {
+            font-size: 2.2rem !important;
+        }
+        footer p {
+            font-size: 1.2rem !important;
+        }
+        footer span {
+            font-size: 1.3rem !important;
         }
     }
     @media (max-width: 700px) {
@@ -116,23 +129,49 @@
             flex-direction: column !important;
             gap: 0.7rem !important;
         }
+        nav button {
+            width: 90% !important;
+            max-width: 320px !important;
+        }
         .game-section {
-            padding: 1rem 0.2rem !important;
+            padding: 1rem 0.5rem !important;
         }
         #memory-board {
             grid-template-columns: repeat(4, 60px) !important;
         }
+        footer {
+            padding: 2rem 1rem !important;
+        }
+        footer p:first-child {
+            font-size: 1.1rem !important;
+        }
+        footer span {
+            font-size: 1.2rem !important;
+        }
     }
     @media (max-width: 500px) {
+        header {
+            padding: 1.5rem 0.5rem !important;
+        }
         header h1 {
-            font-size: 1.5rem !important;
+            font-size: 1.6rem !important;
+            letter-spacing: 1px !important;
+        }
+        header p {
+            font-size: 0.95rem !important;
+        }
+        #logout-btn {
+            top: 10px !important;
+            right: 10px !important;
+            padding: 0.4rem 0.8rem !important;
+            font-size: 0.85rem !important;
         }
         nav button {
             font-size: 0.95rem !important;
             padding: 0.7rem 1rem !important;
         }
         .game-section h2 {
-            font-size: 1.2rem !important;
+            font-size: 1.3rem !important;
         }
         #memory-board {
             grid-template-columns: repeat(2, 60px) !important;
@@ -144,6 +183,42 @@
             width: 50px !important;
             height: 50px !important;
             font-size: 1.3rem !important;
+        }
+        #caca-grid {
+            gap: 2px !important;
+        }
+        footer {
+            padding: 1.5rem 0.8rem !important;
+        }
+        footer p:first-child {
+            font-size: 1rem !important;
+            letter-spacing: 0.5px !important;
+        }
+        footer span {
+            font-size: 1.1rem !important;
+            display: block !important;
+            margin-top: 0.3rem !important;
+        }
+        footer p:last-child {
+            font-size: 0.85rem !important;
+        }
+    }
+    @media (max-width: 350px) {
+        header h1 {
+            font-size: 1.3rem !important;
+        }
+        #memory-board {
+            grid-template-columns: repeat(2, 50px) !important;
+        }
+        .memory-card {
+            width: 50px !important;
+            height: 50px !important;
+        }
+        footer p:first-child {
+            font-size: 0.9rem !important;
+        }
+        footer span {
+            font-size: 1rem !important;
         }
     }
             #click-btn:active {
@@ -220,9 +295,12 @@
         </section>
         <!-- Contato e acessibilidade -->
     </main>
-    <footer>
-        &copy; 2025 Jogos Interativos | Desenvolvido para todas as idades
+    
+    <footer style="background:linear-gradient(90deg,#f857a6 0%,#ff5858 100%);color:#fff;text-align:center;padding:2.5rem 1.5rem;margin-top:0;box-shadow:0 -4px 15px rgba(0,0,0,0.15);width:100%;position:relative;z-index:100;">
+        <p style="font-size:1.4rem;margin:0 0 0.5rem 0;font-weight:700;letter-spacing:1.5px;">✨ Desenvolvido por: <span style="font-size:1.6rem;color:#fffbe0;text-shadow:0 2px 6px rgba(0,0,0,0.3);">Wyllfred Santana</span> ✨</p>
+        <p style="font-size:1rem;margin:0;opacity:0.95;">© 2025 Jogos Interativos | Desenvolvido para todas as idades | Criado por <strong>Wyllfred Santana</strong></p>
     </footer>
+    
     <script src="script.js"></script>
 <script>
 // Login persistente com localStorage
