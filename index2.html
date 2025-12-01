@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jogos Interativos </title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; img-src 'self' https://cdn.jsdelivr.net data:; style-src 'self' 'unsafe-inline';">
+    <meta name="description" content="Jogos Interativos - Diversão, desafio e aprendizado para todas as idades">
+    <meta name="author" content="Wyllfred Santana">
+    <meta name="theme-color" content="#f857a6">
+    <title>Jogos Interativos - Desenvolvido por Wyllfred Santana</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -50,6 +54,10 @@
                 <span style="font-size:1.5rem;">🔤</span>
                 <span>Caça-Palavras</span>
             </button>
+            <button id="btn-termo" onclick="showGame('termo')" style="background:#fff;color:#26a69a;border:2px solid #26a69a;padding:1rem 2rem;border-radius:16px;font-size:1.1rem;box-shadow:0 2px 8px rgba(38,166,154,0.08);transition:all 0.2s;display:flex;align-items:center;gap:0.7rem;">
+                <span style="font-size:1.5rem;">📝</span>
+                <span>Termo</span>
+            </button>
         </div>
     </nav>
     <main style="background: #f9f9f9; border-radius: 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.07); max-width: 950px; margin: 0 auto 2rem auto; padding: 2.5rem 1.5rem;">
@@ -62,6 +70,7 @@
                 <li><b>Jogo do Dado:</b> Clique no botão para rolar o dado e veja o resultado de 1 a 6.</li>
                 <li><b>Click Rápido:</b> Clique no botão o máximo de vezes que conseguir em 15 segundos!</li>
                 <li><b>Caça-Palavras:</b> Escolha o nível (Fácil, Médio, Difícil ou Extremo) e encontre as palavras escondidas no quadro. Digite as palavras encontradas para marcá-las.</li>
+                <li><b>Termo:</b> Adivinhe a palavra de 5 letras em até 6 tentativas. Verde = letra correta na posição certa, Amarelo = letra existe mas está na posição errada, Cinza = letra não existe na palavra.</li>
             </ul>
         </section>
         <!-- Jogo da Memória -->
@@ -293,6 +302,46 @@
             <button onclick="reiniciarCaca()" style="background:#fff;color:#9b59b6;border:2px solid #9b59b6;padding:0.7rem 1.5rem;border-radius:10px;font-size:1.05rem;font-weight:bold;box-shadow:0 2px 8px rgba(155,89,182,0.08);margin:0 auto 1rem auto;display:block;">Reiniciar</button>
             <div id="caca-status" style="text-align:center;font-size:1.1rem;color:#9b59b6;font-weight:bold;min-height:1.5rem;margin-bottom:0.8rem;"></div>
         </section>
+        
+        <!-- Termo -->
+        <section id="termo" class="game-section" style="display:none;background:linear-gradient(120deg,#e0f7fa 0%,#fff 100%);border-radius:16px;box-shadow:0 4px 18px rgba(38,166,154,0.10);padding:2rem 1.5rem;margin-bottom:2rem;">
+            <h2 style="color:#26a69a;text-align:center;font-size:2rem;margin-bottom:1.2rem;letter-spacing:1px;">📝 Termo - Adivinhe a Palavra</h2>
+            <p style="text-align:center;font-size:1.1rem;margin-bottom:1.5rem;color:#666;">Você tem 6 tentativas para adivinhar a palavra de 5 letras!</p>
+            <div id="termo-board" style="display:flex;flex-direction:column;gap:0.5rem;max-width:350px;margin:0 auto 1.5rem auto;"></div>
+            <form id="termo-form" style="display:flex;justify-content:center;gap:0.8rem;margin-bottom:1rem;flex-wrap:wrap;">
+                <input id="termo-input" type="text" maxlength="5" placeholder="5 letras" style="padding:0.8rem 1.2rem;border-radius:10px;border:2px solid #26a69a;font-size:1.2rem;outline:none;width:150px;text-transform:uppercase;text-align:center;font-weight:bold;letter-spacing:3px;">
+                <button type="submit" style="background:#26a69a;color:#fff;border:none;padding:0.8rem 1.5rem;border-radius:10px;font-size:1.1rem;font-weight:bold;box-shadow:0 2px 8px rgba(38,166,154,0.15);">Enviar</button>
+            </form>
+            <div id="termo-status" style="text-align:center;font-size:1.1rem;font-weight:bold;min-height:1.5rem;margin-bottom:1rem;"></div>
+            <button onclick="reiniciarTermo()" style="background:#fff;color:#26a69a;border:2px solid #26a69a;padding:0.7rem 1.5rem;border-radius:10px;font-size:1.05rem;font-weight:bold;box-shadow:0 2px 8px rgba(38,166,154,0.08);margin:0 auto;display:block;">Novo Jogo</button>
+            <div style="margin-top:1.5rem;padding:1rem;background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,0.05);">
+                <p style="font-size:0.95rem;color:#666;margin:0.3rem 0;"><span style="display:inline-block;width:20px;height:20px;background:#66bb6a;border-radius:4px;"></span> = Letra correta no lugar certo</p>
+                <p style="font-size:0.95rem;color:#666;margin:0.3rem 0;"><span style="display:inline-block;width:20px;height:20px;background:#ffca28;border-radius:4px;"></span> = Letra existe, mas no lugar errado</p>
+                <p style="font-size:0.95rem;color:#666;margin:0.3rem 0;"><span style="display:inline-block;width:20px;height:20px;background:#9e9e9e;border-radius:4px;"></span> = Letra não existe na palavra</p>
+            </div>
+        </section>
+        
+        <!-- Avaliação -->
+        <section style="background:linear-gradient(120deg,#fff8e1 0%,#fff 100%);border-radius:16px;box-shadow:0 4px 18px rgba(255,193,7,0.10);padding:2rem 1.5rem;margin-bottom:2rem;max-width:950px;margin-left:auto;margin-right:auto;">
+            <h2 style="color:#ffa726;text-align:center;font-size:2rem;margin-bottom:1.2rem;letter-spacing:1px;">⭐ Avalie Nossa Plataforma</h2>
+            <p style="text-align:center;font-size:1.1rem;color:#666;margin-bottom:1.5rem;">Sua opinião é muito importante para nós!</p>
+            <div style="display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;margin-bottom:1.5rem;">
+                <button onclick="avaliar('gostei')" style="background:linear-gradient(135deg,#66bb6a,#43a047);color:#fff;border:none;padding:1.2rem 2.5rem;border-radius:16px;font-size:1.2rem;font-weight:bold;box-shadow:0 4px 12px rgba(102,187,106,0.3);cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;display:flex;align-items:center;gap:0.8rem;">
+                    <span style="font-size:2rem;">👍</span>
+                    <span>Gostei</span>
+                </button>
+                <button onclick="avaliar('nao-gostei')" style="background:linear-gradient(135deg,#ef5350,#e53935);color:#fff;border:none;padding:1.2rem 2.5rem;border-radius:16px;font-size:1.2rem;font-weight:bold;box-shadow:0 4px 12px rgba(239,83,80,0.3);cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;display:flex;align-items:center;gap:0.8rem;">
+                    <span style="font-size:2rem;">👎</span>
+                    <span>Não Gostei</span>
+                </button>
+            </div>
+            <div id="avaliacao-resultado" style="text-align:center;font-size:1.1rem;font-weight:bold;min-height:1.5rem;"></div>
+            <div id="avaliacao-stats" style="text-align:center;margin-top:1.5rem;padding:1rem;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                <p style="font-size:1rem;color:#666;margin:0.3rem 0;">👍 <span id="total-gostei" style="color:#43a047;font-weight:bold;">0</span> pessoas gostaram</p>
+                <p style="font-size:1rem;color:#666;margin:0.3rem 0;">👎 <span id="total-nao-gostei" style="color:#e53935;font-weight:bold;">0</span> pessoas não gostaram</p>
+            </div>
+        </section>
+        
         <!-- Contato e acessibilidade -->
     </main>
     
@@ -344,6 +393,55 @@ document.addEventListener('DOMContentLoaded', function() {
         const logoutBtn = document.getElementById('logout-btn');
         if (logoutBtn) logoutBtn.style.display = 'inline-block';
     }
+});
+
+// Sistema de avaliação
+function avaliar(tipo) {
+    const jaAvaliou = localStorage.getItem('usuario_avaliou');
+    
+    if (jaAvaliou) {
+        document.getElementById('avaliacao-resultado').innerHTML = '<span style="color:#ff9800;">⚠️ Você já avaliou! Obrigado pela sua opinião.</span>';
+        setTimeout(() => {
+            document.getElementById('avaliacao-resultado').innerHTML = '';
+        }, 3000);
+        return;
+    }
+    
+    // Salva a avaliação
+    localStorage.setItem('usuario_avaliou', tipo);
+    
+    // Atualiza contadores
+    let gostei = parseInt(localStorage.getItem('total_gostei') || '0');
+    let naoGostei = parseInt(localStorage.getItem('total_nao_gostei') || '0');
+    
+    if (tipo === 'gostei') {
+        gostei++;
+        localStorage.setItem('total_gostei', gostei);
+        document.getElementById('avaliacao-resultado').innerHTML = '<span style="color:#43a047;">✅ Obrigado! Ficamos felizes que tenha gostado!</span>';
+    } else {
+        naoGostei++;
+        localStorage.setItem('total_nao_gostei', naoGostei);
+        document.getElementById('avaliacao-resultado').innerHTML = '<span style="color:#e53935;">📝 Obrigado pelo feedback! Vamos trabalhar para melhorar.</span>';
+    }
+    
+    atualizarEstatisticasAvaliacao();
+    
+    setTimeout(() => {
+        document.getElementById('avaliacao-resultado').innerHTML = '';
+    }, 4000);
+}
+
+function atualizarEstatisticasAvaliacao() {
+    const gostei = parseInt(localStorage.getItem('total_gostei') || '0');
+    const naoGostei = parseInt(localStorage.getItem('total_nao_gostei') || '0');
+    
+    document.getElementById('total-gostei').textContent = gostei;
+    document.getElementById('total-nao-gostei').textContent = naoGostei;
+}
+
+// Carregar estatísticas ao iniciar
+document.addEventListener('DOMContentLoaded', function() {
+    atualizarEstatisticasAvaliacao();
 });
 
 function logout() {

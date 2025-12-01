@@ -9,6 +9,7 @@ function showGame(game) {
     if (game === 'quiz' && typeof showQuiz === 'function') showQuiz();
     if (game === 'velha' && typeof startVelha === 'function') startVelha();
     if (game === 'caca' && typeof iniciarCaca === 'function') iniciarCaca();
+    if (game === 'termo' && typeof iniciarTermo === 'function') iniciarTermo();
 }
 
 // Jogo da Memória
@@ -940,4 +941,170 @@ function destacarCelulas(tamanho, linha, coluna, deltaLinha, deltaColuna) {
             }, 300);
         }
     }
+}
+
+// Jogo Termo
+const termoPalavras = [
+    'BRASA', 'CAMPO', 'DENTE', 'FESTA', 'GRAMA', 'HOTEL', 'LIMAO', 'LUGAR', 
+    'METAL', 'NORTE', 'PRATO', 'RISCO', 'SAMBA', 'TARDE', 'VERDE', 'ZEBRA',
+    'BARRO', 'CARNE', 'DANCE', 'EXAME', 'FORCA', 'GRITO', 'INVERNO', 'JUNTA',
+    'KISMET', 'LETRA', 'MOTOR', 'NEXO', 'ORDEM', 'PONTE', 'QUINTA', 'RITMO',
+    'SENSO', 'TERRA', 'UNICO', 'VALOR', 'MUNDO', 'XADREZ', 'ZEBRA', 'AMIGO',
+    'BRAVO', 'CESTA', 'DOIDO', 'ESCOLA', 'FILME', 'GOSTO', 'HUMOR', 'LINHA'
+];
+
+let termoPalavraAtual = '';
+let termoTentativas = [];
+let termoTentativaAtual = 0;
+let termoMaxTentativas = 6;
+let termoJogoAtivo = true;
+
+function iniciarTermo() {
+    termoPalavraAtual = termoPalavras[Math.floor(Math.random() * termoPalavras.length)];
+    termoTentativas = [];
+    termoTentativaAtual = 0;
+    termoJogoAtivo = true;
+    
+    document.getElementById('termo-input').value = '';
+    document.getElementById('termo-input').disabled = false;
+    document.getElementById('termo-status').innerHTML = '';
+    
+    renderizarBoardTermo();
+}
+
+function renderizarBoardTermo() {
+    const board = document.getElementById('termo-board');
+    board.innerHTML = '';
+    
+    for (let i = 0; i < termoMaxTentativas; i++) {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;gap:0.4rem;justify-content:center;';
+        
+        for (let j = 0; j < 5; j++) {
+            const cell = document.createElement('div');
+            cell.style.cssText = `
+                width:60px;
+                height:60px;
+                border:2px solid #26a69a;
+                border-radius:8px;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                font-size:1.8rem;
+                font-weight:bold;
+                background:#fff;
+                color:#333;
+            `;
+            
+            if (termoTentativas[i]) {
+                const letra = termoTentativas[i].palavra[j];
+                const status = termoTentativas[i].status[j];
+                
+                cell.textContent = letra;
+                
+                if (status === 'correto') {
+                    cell.style.background = '#66bb6a';
+                    cell.style.color = '#fff';
+                    cell.style.borderColor = '#66bb6a';
+                } else if (status === 'posicao') {
+                    cell.style.background = '#ffca28';
+                    cell.style.color = '#fff';
+                    cell.style.borderColor = '#ffca28';
+                } else {
+                    cell.style.background = '#9e9e9e';
+                    cell.style.color = '#fff';
+                    cell.style.borderColor = '#9e9e9e';
+                }
+            }
+            
+            row.appendChild(cell);
+        }
+        
+        board.appendChild(row);
+    }
+}
+
+function verificarPalavraTermo(palavra) {
+    if (palavra.length !== 5) {
+        document.getElementById('termo-status').innerHTML = '<span style="color:#e53935;">⚠️ A palavra deve ter exatamente 5 letras!</span>';
+        setTimeout(() => {
+            document.getElementById('termo-status').innerHTML = '';
+        }, 2000);
+        return;
+    }
+    
+    if (!termoJogoAtivo) {
+        document.getElementById('termo-status').innerHTML = '<span style="color:#ff9800;">⚠️ O jogo já terminou! Clique em "Novo Jogo"</span>';
+        return;
+    }
+    
+    const status = [];
+    const palavraArray = termoPalavraAtual.split('');
+    const palpiteArray = palavra.split('');
+    const usadas = Array(5).fill(false);
+    
+    // Primeiro passa: marca as letras corretas
+    for (let i = 0; i < 5; i++) {
+        if (palpiteArray[i] === palavraArray[i]) {
+            status[i] = 'correto';
+            usadas[i] = true;
+        }
+    }
+    
+    // Segunda passa: marca as letras que existem mas estão na posição errada
+    for (let i = 0; i < 5; i++) {
+        if (status[i]) continue; // Já marcada como correta
+        
+        let encontrou = false;
+        for (let j = 0; j < 5; j++) {
+            if (!usadas[j] && palpiteArray[i] === palavraArray[j]) {
+                status[i] = 'posicao';
+                usadas[j] = true;
+                encontrou = true;
+                break;
+            }
+        }
+        
+        if (!encontrou) {
+            status[i] = 'errado';
+        }
+    }
+    
+    termoTentativas.push({ palavra, status });
+    termoTentativaAtual++;
+    
+    renderizarBoardTermo();
+    
+    // Verifica vitória
+    if (palavra === termoPalavraAtual) {
+        document.getElementById('termo-status').innerHTML = `<span style="color:#66bb6a;">🎉 Parabéns! Você acertou em ${termoTentativaAtual} tentativa(s)!</span>`;
+        document.getElementById('termo-input').disabled = true;
+        termoJogoAtivo = false;
+    } else if (termoTentativaAtual >= termoMaxTentativas) {
+        document.getElementById('termo-status').innerHTML = `<span style="color:#e53935;">😔 Fim de jogo! A palavra era: <strong>${termoPalavraAtual}</strong></span>`;
+        document.getElementById('termo-input').disabled = true;
+        termoJogoAtivo = false;
+    }
+    
+    document.getElementById('termo-input').value = '';
+}
+
+function reiniciarTermo() {
+    iniciarTermo();
+}
+
+// Event listener para o formulário do Termo
+document.getElementById('termo-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const input = document.getElementById('termo-input');
+    const palavra = input.value.toUpperCase().trim();
+    
+    if (palavra) {
+        verificarPalavraTermo(palavra);
+    }
+});
+
+// Inicializa o jogo Termo quando a página carrega
+if (typeof iniciarTermo === 'function') {
+    iniciarTermo();
 }
