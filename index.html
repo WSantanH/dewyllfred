@@ -407,20 +407,20 @@ function avaliar(tipo) {
         return;
     }
     
-    // Salva a avaliação
+    // Salva a avaliação do usuário
     localStorage.setItem('usuario_avaliou', tipo);
     
-    // Atualiza contadores
-    let gostei = parseInt(localStorage.getItem('total_gostei') || '0');
-    let naoGostei = parseInt(localStorage.getItem('total_nao_gostei') || '0');
+    // Atualiza contadores globais (compartilhados entre todos os usuários)
+    let gostei = parseInt(localStorage.getItem('total_gostei_global') || '0');
+    let naoGostei = parseInt(localStorage.getItem('total_nao_gostei_global') || '0');
     
     if (tipo === 'gostei') {
         gostei++;
-        localStorage.setItem('total_gostei', gostei);
+        localStorage.setItem('total_gostei_global', gostei);
         document.getElementById('avaliacao-resultado').innerHTML = '<span style="color:#43a047;">✅ Obrigado! Ficamos felizes que tenha gostado!</span>';
     } else {
         naoGostei++;
-        localStorage.setItem('total_nao_gostei', naoGostei);
+        localStorage.setItem('total_nao_gostei_global', naoGostei);
         document.getElementById('avaliacao-resultado').innerHTML = '<span style="color:#e53935;">📝 Obrigado pelo feedback! Vamos trabalhar para melhorar.</span>';
     }
     
@@ -432,8 +432,8 @@ function avaliar(tipo) {
 }
 
 function atualizarEstatisticasAvaliacao() {
-    const gostei = parseInt(localStorage.getItem('total_gostei') || '0');
-    const naoGostei = parseInt(localStorage.getItem('total_nao_gostei') || '0');
+    const gostei = parseInt(localStorage.getItem('total_gostei_global') || '0');
+    const naoGostei = parseInt(localStorage.getItem('total_nao_gostei_global') || '0');
     
     document.getElementById('total-gostei').textContent = gostei;
     document.getElementById('total-nao-gostei').textContent = naoGostei;
@@ -445,7 +445,9 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function logout() {
+    // Remove apenas o nome do jogador, mantém as estatísticas globais
     localStorage.removeItem('jogador_nome');
+    localStorage.removeItem('usuario_avaliou');
     document.getElementById('login-modal').style.display = 'flex';
     document.body.classList.add('login-aberto');
     // Remove nome do header se existir
